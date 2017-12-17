@@ -108,6 +108,12 @@ class PixelDraw():
     NUMBERS = (pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5,
                pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9)
 
+    TIMES = {
+        'move' : 100,
+        'undo' : 100,
+        'cp' : 100
+    }
+
     def __init__(self):
         self.x = 800
         self.y = 640
@@ -116,6 +122,8 @@ class PixelDraw():
         self.complete = False
         self.history = None
         self.historyPointer = 0
+
+        self.elapsedTime = dict(PixelDraw.TIMES)
 
         self.background = None
         self.backgroundRect = None
@@ -206,6 +214,10 @@ class PixelDraw():
 
         self.background = pygame.image.load("background2.png")
         self.backgroundRect = self.background.get_rect()
+        self.grid = pygame.image.load("grid.png")
+        self.gridRect = self.grid.get_rect()
+        self.gridRect.x = self.COORDINATES['canvas'][0]
+        self.gridRect.y = self.COORDINATES['canvas'][1]
 
         self.backdrop = pygame.Surface((512, 512))
         self.backdropRect = self.backdrop.get_rect()
@@ -262,7 +274,6 @@ class PixelDraw():
         self.historyState()
 
     def applyPixelGrid(self, grid):
-        print("History =",self.historyPointer)
         for y in range(16):
             for x in range(16):
                 self.canvasSprites[y][x].update(grid[y][x])
@@ -285,15 +296,19 @@ class PixelDraw():
         if fillColor != color:
             fill(coordinates, color, fillColor)
             self.applyPixelGrid(self.pixelGrid)
+            self.historyState()
 
     def colorPixel(self, coordinates, color):
         x = coordinates[0]
         y = coordinates[1]
+        if self.pixelGrid[y][x] == color:
+            return False
         p = self.canvasSprites[y][x]
-        self.pixelGrid[y][x] = color
         p.update(color)
+        self.pixelGrid[y][x] = color
         self.canvas.set_at((x,y), color)
         self.previewList.update(self.canvas)
+        return True
 
     def drawSprites(self):
         self.pixelList.draw(self.screen)
@@ -331,18 +346,56 @@ class PixelDraw():
     def execute(self):
         self.setup()
         while not self.complete:
+            moved = False
 
             pressedKeys = pygame.key.get_pressed()
 
-            '''
             if pressedKeys[pygame.K_RIGHT]:
-                self.setCanvasPointer((self.canvasPointer[0] + 1, self.canvasPointer[1]))
+                if self.elapsedTime['move'] >= PixelDraw.TIMES['move']:
+                    moved = True
+                    self.setCanvasPointer((self.canvasPointer[0] + 1, self.canvasPointer[1]))
             if pressedKeys[pygame.K_LEFT]:
-                self.setCanvasPointer((self.canvasPointer[0] - 1, self.canvasPointer[1]))
+                if self.elapsedTime['move'] >= PixelDraw.TIMES['move']:
+                    moved = True
+                    self.setCanvasPointer((self.canvasPointer[0] - 1, self.canvasPointer[1]))
             if pressedKeys[pygame.K_UP]:
-                self.setCanvasPointer((self.canvasPointer[0], self.canvasPointer[1] - 1))
+                if self.elapsedTime['move'] >= PixelDraw.TIMES['move']:
+                    moved = True
+                    self.setCanvasPointer((self.canvasPointer[0], self.canvasPointer[1] - 1))
             if pressedKeys[pygame.K_DOWN]:
-                self.setCanvasPointer((self.canvasPointer[0], self.canvasPointer[1] + 1))
+                if self.elapsedTime['move'] >= PixelDraw.TIMES['move']:
+                    moved = True
+                    self.setCanvasPointer((self.canvasPointer[0], self.canvasPointer[1] + 1))
+            if pressedKeys[pygame.K_SPACE]:
+                color = self.COLORS[self.categoryPointer][self.colorPointer]
+                colored = self.colorPixel(self.canvasPointer, color)
+                if colored:
+                    self.historyState()
+
+            if pressedKeys[pygame.K_q]:
+                if self.elapsedTime['undo'] >= PixelDraw.TIMES['undo']:
+                    self.undo()
+                    self.elapsedTime['undo'] = 0
+
+            if pressedKeys[pygame.K_w]:
+                if self.elapsedTime['undo'] >= PixelDraw.TIMES['undo']:
+                    self.redo()
+                    self.elapsedTime['undo'] = 0
+
+            if pressedKeys[pygame.K_d]:
+                if self.colorPointer != 0 and self.elapsedTime['cp'] >= PixelDraw.TIMES['cp']:
+                    self.setColorPointer(self.colorPointer - 1, True)
+                    self.elapsedTime['cp'] = 0
+
+            if pressedKeys[pygame.K_f]:
+                if self.colorPointer != 9 and self.elapsedTime['cp'] >= PixelDraw.TIMES['cp']:
+                    self.setColorPointer(self.colorPointer + 1, True)
+                    self.elapsedTime['cp'] = 0
+
+            if moved:
+                self.elapsedTime['move'] = 0
+
+            '''
             if pressedKeys[pygame.K_LEFTBRACKET]:
                 if self.colorPointer != 0:
                     self.setColorPointer(self.colorPointer - 1, True)
@@ -359,51 +412,12 @@ class PixelDraw():
 
                 if event.type == pygame.KEYDOWN:
 
-                    if event.key == pygame.K_RIGHT:
-                        self.setCanvasPointer((self.canvasPointer[0]+1, self.canvasPointer[1]))
-                        if pressedKeys[pygame.K_SPACE]:
-                            color = self.COLORS[self.categoryPointer][self.colorPointer]
-                            self.colorPixel(self.canvasPointer, color)
-                            self.historyState()
-                    if event.key == pygame.K_LEFT:
-                        self.setCanvasPointer((self.canvasPointer[0]-1, self.canvasPointer[1]))
-                        if pressedKeys[pygame.K_SPACE]:
-                            color = self.COLORS[self.categoryPointer][self.colorPointer]
-                            self.colorPixel(self.canvasPointer, color)
-                            self.historyState()
-                    if event.key == pygame.K_UP:
-                        self.setCanvasPointer((self.canvasPointer[0], self.canvasPointer[1]-1))
-                        if pressedKeys[pygame.K_SPACE]:
-                            color = self.COLORS[self.categoryPointer][self.colorPointer]
-                            self.colorPixel(self.canvasPointer, color)
-                            self.historyState()
-                    if event.key == pygame.K_DOWN:
-                        self.setCanvasPointer((self.canvasPointer[0], self.canvasPointer[1]+1))
-                        if pressedKeys[pygame.K_SPACE]:
-                            color = self.COLORS[self.categoryPointer][self.colorPointer]
-                            self.colorPixel(self.canvasPointer, color)
-                            self.historyState()
-
-                    if event.key == pygame.K_e:
-                        if self.colorPointer != 0:
-                            self.setColorPointer(self.colorPointer - 1, True)
-
-                    if event.key == pygame.K_r:
-                        if self.colorPointer != 9:
-                            self.setColorPointer(self.colorPointer + 1, True)
-
                     if event.key == pygame.K_c:
                         self.fillAll(self.transparentColor)
 
-                    if event.key == pygame.K_f:
+                    if event.key == pygame.K_g:
                         color = self.COLORS[self.categoryPointer][self.colorPointer]
                         self.bucketFill(self.canvasPointer, color)
-
-                    if event.key == pygame.K_q:
-                        self.undo()
-
-                    if event.key == pygame.K_w:
-                        self.redo()
 
                     if event.key == pygame.K_t:
                         if pygame.key.get_mods() & pygame.KMOD_SHIFT:
@@ -417,13 +431,9 @@ class PixelDraw():
                     if event.key == pygame.K_SEMICOLON:
                         self.setCategoryPointer(self.NEXT_CATEGORY[self.categoryPointer])
 
-                    if event.key == pygame.K_SPACE:
-                        color = self.COLORS[self.categoryPointer][self.colorPointer]
-                        self.colorPixel(self.canvasPointer, color)
-                        self.historyState()
-
                     if event.key == pygame.K_s:
-                        pygame.image.save(self.canvas, "saved.png")
+                        if pygame.key.get_mods() & pygame.KMOD_SHIFT:
+                            pygame.image.save(self.canvas, "saved.png")
 
                     if event.key in PixelDraw.NUMBERS:
                         self.setColorPointer(event.key-48, False)
@@ -432,18 +442,18 @@ class PixelDraw():
 
             self.screen.fill(BLACK)
             self.screen.blit(self.background, self.backgroundRect)
-            #self.screen.blit(grid, grect)
+            self.screen.blit(self.grid, self.gridRect)
             self.drawSprites()
-            self.clock.tick(60)
+            delta = self.clock.tick(60)
+            for k in self.elapsedTime:
+                if self.elapsedTime[k] < 1000:
+                    self.elapsedTime[k] += delta
             pygame.display.flip()
 
         pygame.quit()
 
     def historyState(self):
-        if self.historyPointer == 0:
-            self.history.pushState([x[:] for x in self.pixelGrid], 0)
-        else:
-            self.history.pushState([x[:] for x in self.pixelGrid], self.historyPointer+1)
+        self.history.pushState([x[:] for x in self.pixelGrid], self.historyPointer)
         self.historyPointer = 0
 
     def setCanvas(self, num):
@@ -490,24 +500,22 @@ class PixelDraw():
 
     def undo(self):
         if self.historyPointer + 1 < len(self.history.states):
-            grid = self.history.get(self.historyPointer + 1)
-            self.pixelGrid = [x[:] for x in grid]
             self.historyPointer += 1
+            grid = self.history.get(self.historyPointer)
+            self.pixelGrid = [x[:] for x in grid]
             self.applyPixelGrid(grid)
-            print("State is now",self.historyPointer)
         else:
-            print("cant undo")
+            print("Cannot Undo")
             #print(self.historyPointer)
 
     def redo(self):
         if self.historyPointer > 0:
-            grid = self.history.get(self.historyPointer-1)
-            self.pixelGrid = [x[:] for x in grid]
             self.historyPointer -= 1
+            grid = self.history.get(self.historyPointer)
+            self.pixelGrid = [x[:] for x in grid]
             self.applyPixelGrid(grid)
-            print("State is now", self.historyPointer)
         else:
-            print("cant redo")
+            print("Cannot Redo")
             #print(self.historyPointer)
 
 if __name__ == '__main__':
