@@ -1,0 +1,313 @@
+# Pixel Draw Elements File
+# Place this file in the same directory as main.py
+
+# REFERENCE
+# @MENU - Group to hold various screen elements, must be defined.
+# !ELEMENT - Define screen element that can be randomly accessed.
+# !ARRAY - Group of sprites requiring random access.
+# !RANGE - Group of sprites that cannot be accessed individually.
+# !BURN - Draw unmodifiable text onto another surface.
+# $ONTO - Surface to burn text onto, text cannot be altered.
+# $GROUP - Group update/draw of similar sprites.
+
+?FILE elements
+
+@MENU main
+
+!ELEMENT background
+$TYPE static
+$IMAGE background2.png
+$LOCATION (0,0)
+
+
+!ELEMENT grid
+$TYPE static
+$IMAGE grid.png
+$LOCATION (10,10)
+
+
+!ELEMENT preview16
+$TYPE preview
+$SIZE (16,16)
+$LOCATION (538,16)
+$GROUP previews
+
+
+!ELEMENT preview32
+$TYPE preview
+$SIZE (32,32)
+$LOCATION (562,63)
+$GROUP previews
+
+
+!ELEMENT preview64
+$TYPE preview
+$SIZE (64,64)
+$LOCATION (562,136)
+$GROUP previews
+
+
+!ELEMENT highlightColor
+$TYPE highlight
+$IMAGE highlightColor.png
+$LOCATION (20,575)
+$GROUP highlights
+
+
+!ELEMENT highlightCanvas
+$TYPE highlight
+$IMAGE highlightCanvas.png
+$LOCATION (10,10)
+$GROUP highlights
+
+
+!ELEMENT highlightFrame
+$TYPE highlight
+$IMAGE highlightFrame.png
+$LOCATION (551,269)
+$GROUP highlights
+
+
+!ELEMENT labelBlue
+$TYPE label
+$TEXT blue
+$FONT 16
+$LOCATION (18,541)
+
+
+!ELEMENT labelRed
+$TYPE label
+$TEXT red
+$FONT 16
+$LOCATION (18,541)
+
+
+!ELEMENT labelGreen
+$TYPE label
+$TEXT green
+$FONT 16
+$LOCATION (18,541)
+
+
+!ELEMENT labelWhite
+$TYPE label
+$TEXT white
+$FONT 16
+$LOCATION (18,541)
+
+
+!ELEMENT labelPurple
+$TYPE label
+$TEXT purple
+$FONT 16
+$LOCATION (18,541)
+
+
+!ELEMENT labelOrange
+$TYPE label
+$TEXT orange
+$FONT 16
+$LOCATION (18,541)
+
+
+!BURN
+$TEXT size_preview
+$FONT 16
+$LOCATION (565,15)
+$ONTO background
+
+!BURN
+$TEXT 64x
+$FONT 16
+$LOCATION (556,209)
+$ONTO background
+
+!BURN
+$TEXT 32x
+$FONT 16
+$LOCATION (556,104)
+$ONTO background
+
+!BURN
+$TEXT 3x3
+$FONT 16
+$LOCATION (658,178)
+$ONTO background
+
+!BURN
+$TEXT canvases
+$FONT 16
+$LOCATION (537,247)
+$ONTO background
+
+
+!BURN
+$TEXT Controls:
+$FONT 16
+$LOCATION (537,339)
+$ONTO background
+
+!BURN
+$TEXT N_-_New_Canvas
+$FONT 16
+$LOCATION (537,359)
+$ONTO background
+
+!BURN
+$TEXT S_-_Save
+$FONT 16
+$LOCATION (537,379)
+$ONTO background
+
+!BURN
+$TEXT L_-_Load
+$FONT 16
+$LOCATION (537,399)
+$ONTO background
+
+!BURN
+$TEXT V_-_bucket_fill
+$FONT 16
+$LOCATION (537,419)
+$ONTO background
+
+!BURN
+$TEXT C_-_Copy_Color
+$FONT 16
+$LOCATION (537,439)
+$ONTO background
+
+!BURN
+$TEXT S_-_Save
+$FONT 16
+$LOCATION (537,459)
+$ONTO background
+
+
+!BURN
+$TEXT frames
+$FONT 16
+$LOCATION (613,302)
+$ONTO background
+
+
+!BURN label<
+$TEXT <
+$FONT 16
+$LOCATION (557,302)
+$ONTO background
+
+!BURN label>
+$TEXT >
+$FONT 16
+$LOCATION (749,302)
+$ONTO background
+
+
+!BURN labelSpecial
+$TEXT special
+$FONT 16
+$LOCATION (405,540)
+$ONTO background
+
+
+!ARRAY colorPalette
+$EXTENT (1,10)
+$LOCATION (23,578)
+$OFFSET (37,0)
+$TYPE color
+$SIZE (26,26)
+$GROUP colorPalette
+
+
+!ARRAY colorSpecial
+$EXTENT (1,3)
+$LOCATION (412,578)
+$OFFSET (36,0)
+$TYPE color
+$SIZE (26,26)
+
+
+!ARRAY canvasPixels
+$EXTENT (16,16)
+$LOCATION (10,10)
+$OFFSET (32,32)
+$TYPE color
+$SIZE (32,32)
+
+
+!ARRAY landscape
+$EXTENT (3,3)
+$LOCATION (664,73)
+$OFFSET (32,32)
+$TYPE color
+$SIZE (32,32)
+
+
+!RANGE labelNumbers
+$EXTENT (10,1)
+$LOCATION (28,610)
+$OFFSET (37,0)
+$TYPE burn
+$ONTO background
+$FONT 16
+
+
+!RANGE labelSpecials
+$EXTENT (3,1)
+$LOCATION (417,610)
+$OFFSET (36,0)
+$TYPE burn
+$ONTO background
+$FONT 16
+
+
+@MENU save
+$PARENT main 
+$LOCATION (50,162)
+
+
+!ELEMENT background
+$TYPE static
+$IMAGE save-dialog.png
+$LOCATION (0,0)
+
+
+#!BURN
+#$TEXT save_image
+#$FONT 32
+#$LOCATION (56,24)
+#$ONTO background
+
+
+#!BURN
+#$TEXT .png
+#$FONT 16
+#$LOCATION (?,?)
+
+
+#!BURN
+#$TEXT transparency
+#$FONT 16
+#$LOCATION (96,128)
+#$ONTO background
+
+
+#!BURN
+#$TEXT shift-s to save
+#$FONT 16
+#$LOCATION (96,168)
+#$ONTO background
+
+
+!ELEMENT colorTransparency
+$TYPE color
+$SIZE (26,26)
+$LOCATION (109,285)
+
+
+!ELEMENT filename
+$TYPE label
+$FONT 16
+$LOCATION (106,242)
+

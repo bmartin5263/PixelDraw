@@ -1,0 +1,136 @@
+# Pixel Draw Colors File
+# Place this file in the same directory as main.py
+
+?FILE colors
+
+@CATEGORY white
+!COLOR
+$RGB (255,255,255) 	#white
+!COLOR
+$RGB (248,248,248)
+!COLOR
+$RGB (188,188,188) 	#mid gray
+!COLOR
+$RGB (124,124,124)
+!COLOR
+$RGB (120,120,120) 	#dark gray
+!COLOR
+$RGB (0,0,0) 		#black
+!COLOR
+$RGB (255,0,0)
+!COLOR
+$RGB (0,255,0)
+!COLOR
+$RGB (0,0,255)
+!COLOR
+$RGB (255,255,0)
+
+@CATEGORY red
+!COLOR
+$RGB (129,19,6)		#red
+!COLOR
+$RGB (159,15,10)
+!COLOR
+$RGB (235,55,21)
+!COLOR
+$RGB (217,91,29)	#orange
+!COLOR
+$RGB (237,119,91)
+!COLOR
+$RGB (216,5,90)		#magenta
+!COLOR
+$RGB (237,90,153)
+!COLOR
+$RGB (240,165,192)
+!COLOR
+$RGB (243,185,247)
+!COLOR
+$RGB (245,217,248) 	#pig pink
+
+@CATEGORY green
+!COLOR
+$RGB (25,87,3)		#dark green
+!COLOR
+$RGB (31,103,4)
+!COLOR
+$RGB (38,119,6)
+!COLOR
+$RGB (56,167,12)
+!COLOR
+$RGB (62,183,15)	#green
+!COLOR
+$RGB (57,167,69)
+!COLOR
+$RGB (110,214,87)
+!COLOR
+$RGB (119,247,153)
+!COLOR
+$RGB (192,247,185)
+!COLOR
+$RGB (192,247,216)
+
+@CATEGORY blue
+!COLOR
+$RGB (21,24,187) 	#dark blue
+!COLOR
+$RGB (31,36,250)	#blue
+!COLOR
+$RGB (42,94,246)
+!COLOR
+$RGB (50,124,246)
+!COLOR
+$RGB (91,189,251)
+!COLOR
+$RGB (174,228,251) 	#light blue
+!COLOR
+$RGB (94,252,251) 	#aqua
+!COLOR
+$RGB (85,232,215)
+!COLOR
+$RGB (47,136,135)
+!COLOR
+$RGB (19,64,87)		#dark aqua
+
+@CATEGORY purple
+!COLOR
+$RGB (69,48,187) 	#dark indigo
+!COLOR
+$RGB (105,77,250) 	#indigo
+!COLOR
+$RGB (151,124,247)
+!COLOR
+$RGB (112,139,250)
+!COLOR
+$RGB (185,185,247)
+!COLOR
+$RGB (141,13,132) 	#violet
+!COLOR
+$RGB (206,27,203)
+!COLOR
+$RGB (239,124,247)
+!COLOR
+$RGB (243,185,247)
+!COLOR
+$RGB (214,185,247)
+
+@CATEGORY orange
+!COLOR
+$RGB (77,48,3) 		#brown
+!COLOR
+$RGB (167,123,16)
+!COLOR
+$RGB (217,91,29)
+!COLOR
+$RGB (241,182,28) 	#orange
+!COLOR
+$RGB (243,159,73)
+!COLOR
+$RGB (244,215,123)
+!COLOR
+$RGB (248,223,169)
+!COLOR
+$RGB (236,207,177) 	#skin
+!COLOR
+$RGB (219,246,123)
+!COLOR
+$RGB (191,246,40) 	#lime
