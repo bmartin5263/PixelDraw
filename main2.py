@@ -59,17 +59,16 @@ class PixelDraw:
         self.screen = screen
         self.clock = pygame.time.Clock()
         self.complete = False
-        self.histories = []
+        self.histories = [History()]
         self.elapsedTime = dict(PixelDraw.TIMES)
         self.useGrid = False
 
         # Navigation
         self.directory = 'main'            # Which Menu Are We In
         self.historyPointer = 0
-        self.categoryPointer = 'white'  # which color type
+        self.categoryPointer = None  # which color type
         self.colorPointer = 0  # which color
-        self.canvasPointer = (0, 0)  # where on the canvas
-        self.canvasPointer = 0
+        self.canvasPointer = None  # where on the canvas
 
         # Data
         self.canvases = [Canvas()]
@@ -89,20 +88,23 @@ class PixelDraw:
 
         self.parseDataFiles(['colors2.txt','elements.txt'])
         self.setCategoryPointer('white')
+        self.setCanvasPointer((0,0))
+        self.setColorPointer(0)
 
     def createElement(self, data, menuName):
         outputElements = []
         elementClass = data['class']
+        elementName = data['name']
         numberOfElements = (1,1)                    # x * y = number of elements
         offset = (0,0)
+        if 'offset' in data:
+            offset = eval(data['offset'])
+            self.off[menuName][elementName] = offset
         elementGroup = None
         if 'group' in data:
             elementGroup = data['group']
         if elementClass == 'array':
             numberOfElements = eval(data['extent'])
-            offset = eval(data['offset'])
-            elementName = data['name']
-            self.off[menuName][elementName] = offset
 
         elementType = data['type']
         elementLocation = eval(data['location'])
@@ -135,23 +137,30 @@ class PixelDraw:
                         outputElements[y].append(e)
             else:
                 imageFile = data['image']
-                e = Element.fromFile(imageFile, elementLocation[0], elementLocation[1])
+                e = Element.fromFile(imageFile, elementLocation[0], elementLocation[1], elementType)
                 if elementGroup is not None:
                     if elementGroup not in self.grp:
                         self.grp[elementGroup] = pygame.sprite.Group()
                     self.grp[elementGroup].add(e)
                 outputElements.append(e)
 
-        if len(outputElements) == 1:
-            outputElements = outputElements[0]
-        try:
-            if len(outputElements) == 1:
+        if elementClass != 'array':
+            while type(outputElements) == list:
                 outputElements = outputElements[0]
-        except TypeError:
-            pass
+        else:
+            if type(outputElements) == list and len(outputElements) == 1:
+                outputElements = outputElements[0]
+            newOut = []
+            for sub in outputElements:
+                if type(sub) == list and len(sub) == 1:
+                    newOut.append(sub[0])
+                else:
+                    newOut.append(sub)
+            outputElements = newOut
         #print(data['name'])
         #print(outputElements)
         #print()
+        #print(outputElements)
         return outputElements
 
     def parseDataFiles(self, fileList):
@@ -216,28 +225,39 @@ class PixelDraw:
     def newCanvas(self):
         return None
 
+    def setCanvasPointer(self, coordinates):
+        self.canvasPointer = coordinates
+        trueCoordinates = (10+(32*coordinates[0]),10+(32*coordinates[1]))
+        self.ele['main']['highlightCanvas'].update(trueCoordinates)
+
     def setCategoryPointer(self, category):
         self.categoryPointer = category
         for i in range(10):
-            self.ele['main']['colorPalette'][0][0].fill(self.col[self.categoryPointer][3])
+            self.ele['main']['colorPalette'][i].fill(self.col[self.categoryPointer][i])
+
+    def setColorPointer(self, num):
+        self.colorPointer = num
 
 
     #################################################################################################
 
-    def drawElement(self, element):
-        self.screen.blit(element.image, element.rect)
+    def drawElement(self, element, location=None):
+        if location is None:
+            location = element.rect
+        self.screen.blit(element.image, location)
 
     def drawScreen(self):
         self.screen.fill(PixelDraw.BLK)
         self.screen.blit(self.ele['main']['background'].image, self.ele['main']['background'].rect)
 
         if self.directory == 'main':
-            #self.grp['colorPalette'].draw(self.screen) TODO
+            self.grp['colorPalette'].draw(self.screen) # TODO
             categoryLabel = PixelDraw.CATEGORY_LABELS[self.categoryPointer]
             self.drawElement(self.ele['main'][categoryLabel])
-            self.drawElement(self.ele['main']['highlightCanvas'])
-            self.drawElement(self.ele['main']['highlightColor'])
-            self.drawElement(self.ele['main']['highlightFrame'])
+            #print(self.ele)
+            #print(self.ele['main']['colorPalette'])
+            #self.drawElement(self.ele['main']['colorPalette'][1])
+            self.grp['highlights'].draw(self.screen)
         pygame.display.flip()
 
     def execute(self):
@@ -250,6 +270,7 @@ class PixelDraw:
 
 
             self.drawScreen()
+            self.clock.tick(60)
 
         pygame.quit()
 

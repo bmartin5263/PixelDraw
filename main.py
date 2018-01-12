@@ -458,7 +458,6 @@ class PixelDraw():
                             if key in PixelDraw.FILENAME_SET:
                                 self.saveNameAdd(key)
                             elif event.key == pygame.K_BACKSPACE:
-                                print("DELETE")
                                 self.saveNameDelete(False)
 
 

@@ -2,7 +2,7 @@
 # Place this file in the same directory as main.py
 
 # REFERENCE
-# @MENU - Group to hold various screen elements, must be defined.
+# @MENU - Group to hold various screen ele1ments, must be defined.
 # !ELEMENT - Define screen element that can be randomly accessed.
 # !ARRAY - Group of sprites requiring random access.
 # !RANGE - Group of sprites that cannot be accessed individually.
@@ -65,7 +65,15 @@ $GROUP highlights
 $TYPE highlight
 $IMAGE highlightFrame.png
 $LOCATION (551,269)
+$OFFSET (32,0)
 $GROUP highlights
+
+
+#!ELEMENT inactiveFrame
+#$TYPE static
+#$IMAGE inactiveFrame.png
+#$LOCATION (551,269)
+#$OFFSET (32,0)
 
 
 !ELEMENT labelBlue
@@ -212,7 +220,7 @@ $ONTO background
 
 
 !ARRAY colorPalette
-$EXTENT (1,10)
+$EXTENT (10,1)
 $LOCATION (23,578)
 $OFFSET (37,0)
 $TYPE color
@@ -234,6 +242,7 @@ $LOCATION (10,10)
 $OFFSET (32,32)
 $TYPE color
 $SIZE (32,32)
+$GROUP canvasPixels
 
 
 !ARRAY landscape

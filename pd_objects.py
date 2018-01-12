@@ -65,15 +65,16 @@ class Element(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(image, (self.width, self.height))
 
     def update(self, *args):
-        if self.type is 'static':
+        print('update is called with',self.type)
+        if self.type == 'static':
             return
-        elif self.type is 'preview':
+        elif self.type == 'preview':
             # args[0] = source surface
             self.scaleOnto(args[0])
-        elif self.type is 'highlight':
-            # args[0] = x
-            # args[1] = y
-            self.reposition(args[0], args[1])
+        elif self.type == 'highlight':
+            # args[0] = (x,y)
+            print('repositioning....')
+            self.reposition(args[0][0], args[0][1])
 
 class History:
 
